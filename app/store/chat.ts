@@ -352,10 +352,15 @@ export const useChatStore = createPersistStore(
           api = new ClientApi(ModelProvider.GPT);
         }
 
+        var config = { ...modelConfig, stream: true };
+        if (modelConfig.model.startsWith("claude-3")) {
+          config.stream = false;
+        }
+
         // make request
         api.llm.chat({
           messages: sendMessages,
-          config: { ...modelConfig, stream: true },
+          config: config,
           onUpdate(message) {
             botMessage.streaming = true;
             if (message) {
